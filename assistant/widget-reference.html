@@ -1,0 +1,284 @@
+<!-- ============ Waleed.in AI Assistant Widget ============ -->
+<!-- ضع رابط الـ Cloudflare Worker هنا بعد نشره -->
+<script>window.WALEED_ASSISTANT_ENDPOINT = "https://REPLACE-WITH-YOUR-WORKER.workers.dev";</script>
+
+<style>
+/* ===== الزر العائم + التاق ===== */
+#wa-fab-wrap{position:fixed;bottom:22px;z-index:9000;display:flex;flex-direction:column;align-items:center;gap:8px}
+html[dir=rtl] #wa-fab-wrap{left:22px}
+html[dir=ltr] #wa-fab-wrap{right:22px}
+#wa-tag{background:var(--card,#fff);color:var(--ink,#0f1923);border:1px solid var(--bdr,#dde1e7);
+  font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:999px;box-shadow:0 6px 20px rgba(15,25,35,.12);
+  white-space:nowrap;cursor:pointer;transition:.25s;opacity:0;transform:translateY(6px);animation:wa-tag-in .5s .8s forwards;
+  font-family:inherit;max-width:78vw;display:flex;align-items:center;gap:6px}
+#wa-tag:hover{border-color:var(--ac,#2e5a92);color:var(--ac,#2e5a92)}
+#wa-tag b{color:var(--ac,#2e5a92)}
+#wa-tag .wa-x{opacity:.5;font-weight:400;margin-inline-start:2px}
+@keyframes wa-tag-in{to{opacity:1;transform:none}}
+#wa-fab{width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;position:relative;
+  background:linear-gradient(140deg,var(--ac,#2e5a92),var(--ac2,#3d6ba6));color:#fff;
+  box-shadow:0 8px 26px rgba(46,90,146,.42);transition:transform .25s, box-shadow .25s;
+  display:flex;align-items:center;justify-content:center}
+#wa-fab:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 12px 32px rgba(46,90,146,.5)}
+#wa-fab svg{width:28px;height:28px}
+#wa-fab .wa-pulse{position:absolute;inset:0;border-radius:50%;border:2px solid var(--ac,#2e5a92);
+  animation:wa-pulse 2.4s ease-out infinite;opacity:0}
+@keyframes wa-pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.55);opacity:0}}
+
+/* ===== نافذة الشات ملء الشاشة ===== */
+#wa-overlay{position:fixed;inset:0;z-index:9500;background:var(--bg,#f1f3f6);
+  display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .28s}
+#wa-overlay.open{opacity:1;pointer-events:auto}
+#wa-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--bdr,#dde1e7);
+  background:var(--card,#fff)}
+#wa-head .wa-ava{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--ac,#2e5a92);flex-shrink:0}
+#wa-head .wa-meta{flex:1;min-width:0}
+#wa-head .wa-name{font-weight:700;font-size:15px;color:var(--ink,#0f1923);font-family:inherit}
+#wa-head .wa-sub{font-size:12px;color:var(--muted,#697785);display:flex;align-items:center;gap:5px}
+#wa-head .wa-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block}
+#wa-close{width:38px;height:38px;border-radius:10px;border:1px solid var(--bdr,#dde1e7);background:var(--bg,#f1f3f6);
+  cursor:pointer;color:var(--ink,#0f1923);display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+#wa-close:hover{border-color:var(--ac,#2e5a92);color:var(--ac,#2e5a92)}
+#wa-close svg{width:18px;height:18px}
+
+#wa-msgs{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:12px;
+  max-width:760px;width:100%;margin:0 auto;scroll-behavior:smooth}
+.wa-bubble{max-width:84%;padding:11px 15px;border-radius:16px;font-size:14.5px;line-height:1.7;
+  white-space:pre-wrap;word-wrap:break-word;animation:wa-up .3s ease}
+@keyframes wa-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wa-bot{align-self:flex-start;background:var(--card,#fff);color:var(--ink,#0f1923);
+  border:1px solid var(--bdr,#dde1e7);border-bottom-inline-start-radius:4px}
+.wa-user{align-self:flex-end;background:var(--ac,#2e5a92);color:#fff;border-bottom-inline-end-radius:4px}
+.wa-typing{align-self:flex-start;display:flex;gap:4px;padding:14px 16px;background:var(--card,#fff);
+  border:1px solid var(--bdr,#dde1e7);border-radius:16px}
+.wa-typing span{width:7px;height:7px;border-radius:50%;background:var(--muted,#697785);animation:wa-blink 1.2s infinite}
+.wa-typing span:nth-child(2){animation-delay:.2s}.wa-typing span:nth-child(3){animation-delay:.4s}
+@keyframes wa-blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+
+/* رقائق اقتراحات */
+#wa-chips{max-width:760px;width:100%;margin:0 auto;padding:0 16px 6px;display:flex;flex-wrap:wrap;gap:8px}
+.wa-chip{font-size:12.5px;padding:7px 13px;border:1px solid var(--bdr,#dde1e7);border-radius:999px;
+  background:var(--card,#fff);color:var(--ink2,#3a4856);cursor:pointer;transition:.2s;font-family:inherit}
+.wa-chip:hover{border-color:var(--ac,#2e5a92);color:var(--ac,#2e5a92)}
+
+/* شريط الإدخال */
+#wa-input-bar{border-top:1px solid var(--bdr,#dde1e7);background:var(--card,#fff);padding:12px 16px}
+#wa-input-inner{max-width:760px;margin:0 auto;display:flex;align-items:flex-end;gap:9px}
+#wa-text{flex:1;resize:none;border:1px solid var(--bdr,#dde1e7);border-radius:14px;padding:11px 14px;
+  font-size:14.5px;font-family:inherit;background:var(--bg,#f1f3f6);color:var(--ink,#0f1923);
+  max-height:120px;line-height:1.5;outline:none;transition:border .2s}
+#wa-text:focus{border-color:var(--ac,#2e5a92)}
+.wa-iconbtn{width:46px;height:46px;border-radius:13px;border:none;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:.2s}
+#wa-mic{background:var(--bg,#f1f3f6);border:1px solid var(--bdr,#dde1e7);color:var(--ink2,#3a4856)}
+#wa-mic:hover{border-color:var(--ac,#2e5a92);color:var(--ac,#2e5a92)}
+#wa-mic.rec{background:#ef4444;color:#fff;border-color:#ef4444;animation:wa-rec 1.2s infinite}
+@keyframes wa-rec{50%{box-shadow:0 0 0 6px rgba(239,68,68,.25)}}
+#wa-send{background:var(--ac,#2e5a92);color:#fff}
+#wa-send:hover{filter:brightness(1.08)}
+#wa-send:disabled{opacity:.45;cursor:default}
+.wa-iconbtn svg{width:20px;height:20px}
+#wa-voice-note{max-width:760px;margin:6px auto 0;font-size:11.5px;color:var(--muted,#697785);text-align:center;min-height:14px}
+.wa-speakbtn{background:none;border:none;cursor:pointer;color:var(--muted,#697785);padding:2px;margin-top:4px;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-family:inherit}
+.wa-speakbtn:hover{color:var(--ac,#2e5a92)}
+.wa-speakbtn svg{width:13px;height:13px}
+</style>
+
+<!-- زر عائم + تاق -->
+<div id="wa-fab-wrap">
+  <button id="wa-tag" type="button" aria-label="افتح المساعد">تعرّف على وليد أكثر <b>عبر مساعده الذكي</b> <span class="wa-x">✦</span></button>
+  <button id="wa-fab" type="button" aria-label="المساعد الذكي">
+    <span class="wa-pulse"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg>
+  </button>
+</div>
+
+<!-- نافذة الشات -->
+<div id="wa-overlay" role="dialog" aria-modal="true" aria-label="المساعد الذكي لوليد">
+  <div id="wa-head">
+    <img class="wa-ava" id="wa-head-ava" alt="وليد"/>
+    <div class="wa-meta">
+      <div class="wa-name">مساعد وليد الذكي</div>
+      <div class="wa-sub"><span class="wa-dot"></span> يعرف خبرات وليد ومجالاته</div>
+    </div>
+    <button id="wa-close" type="button" aria-label="إغلاق والعودة للموقع">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="wa-msgs"></div>
+  <div id="wa-chips"></div>
+  <div id="wa-input-bar">
+    <div id="wa-input-inner">
+      <button class="wa-iconbtn" id="wa-mic" type="button" aria-label="تحدّث صوتيًا" title="تحدّث صوتيًا">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>
+      </button>
+      <textarea id="wa-text" rows="1" placeholder="اسأل عن خبرات وليد ومجالاته..." aria-label="اكتب رسالتك"></textarea>
+      <button class="wa-iconbtn" id="wa-send" type="button" aria-label="إرسال" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+      </button>
+    </div>
+    <div id="wa-voice-note"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var EP = window.WALEED_ASSISTANT_ENDPOINT;
+  var isAR = (document.documentElement.lang||"ar").indexOf("ar")===0;
+
+  var fab=document.getElementById('wa-fab'),
+      tag=document.getElementById('wa-tag'),
+      overlay=document.getElementById('wa-overlay'),
+      closeBtn=document.getElementById('wa-close'),
+      msgsEl=document.getElementById('wa-msgs'),
+      chipsEl=document.getElementById('wa-chips'),
+      textEl=document.getElementById('wa-text'),
+      sendBtn=document.getElementById('wa-send'),
+      micBtn=document.getElementById('wa-mic'),
+      voiceNote=document.getElementById('wa-voice-note'),
+      headAva=document.getElementById('wa-head-ava');
+
+  // صورة الهيدر = صورة البروفايل بالموقع
+  var av=document.querySelector('.av'); if(av&&av.src) headAva.src=av.src;
+  var history=[];
+  var greeted=false;
+  var L = isAR ? {
+    greet:"هلا والله، حيّاك الله في موقع وليد الحربي! أنا مساعده الذكي، وأقدر أعرّفك على خبراته ومهاراته ومجالاته، ووش يقدر يقدّمه. وش تحب تعرف عنه؟",
+    chips:["وش خبرات وليد؟","مجالاته التقنية","خبرته بالربط الحكومي","وش يقدر وليد يسويه؟","كيف أتواصل معه؟"],
+    err:"عذرًا، صار خلل بسيط بالاتصال. جرّب مرة ثانية لو سمحت.",
+    noEP:"المساعد ما تم ربطه بعد. لازم تضيف رابط الـ Worker.",
+    listening:"أسمعك الحين... تكلّم",
+    nospeech:"المتصفح ما يدعم التعرّف الصوتي. استخدم الكتابة لو سمحت.",
+    speak:"استمع",
+    tagHTML:'تعرّف على وليد أكثر <b>عبر مساعده الذكي</b> <span class="wa-x">✦</span>',
+    hName:"مساعد وليد الذكي", hSub:"يعرف خبرات وليد ومجالاته",
+    placeholder:"اسأل عن خبرات وليد ومجالاته...", micTitle:"تحدّث صوتيًا"
+  } : {
+    greet:"Hello and welcome to Waleed Al Harbi's site! I'm his AI assistant — I can tell you about his experience, skills, domains, and what he can do. What would you like to know?",
+    chips:["What's Waleed's experience?","His tech domains","Government integration","What can Waleed do?","How to contact him?"],
+    err:"Sorry, a connection issue occurred. Please try again.",
+    noEP:"The assistant isn't connected yet. Add the Worker URL.",
+    listening:"Listening... speak now",
+    nospeech:"Your browser doesn't support voice input. Please type instead.",
+    speak:"Listen",
+    tagHTML:'Learn more about Waleed <b>via his AI assistant</b> <span class="wa-x">✦</span>',
+    hName:"Waleed's AI Assistant", hSub:"Knows Waleed's experience & domains",
+    placeholder:"Ask about Waleed's experience & domains...", micTitle:"Speak"
+  };
+
+  // طبّق نصوص اللغة
+  tag.innerHTML=L.tagHTML;
+  tag.setAttribute('aria-label', isAR?'افتح المساعد':'Open assistant');
+  document.querySelector('#wa-head .wa-name').textContent=L.hName;
+  document.querySelector('#wa-head .wa-sub').innerHTML='<span class="wa-dot"></span> '+L.hSub;
+  textEl.setAttribute('placeholder',L.placeholder);
+  micBtn.setAttribute('title',L.micTitle);
+  micBtn.setAttribute('aria-label',L.micTitle);
+
+  function openChat(){
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+    document.getElementById('wa-fab-wrap').style.display='none';
+    if(!greeted){ greeted=true; addBot(L.greet); renderChips(L.chips); }
+    setTimeout(function(){textEl.focus();},300);
+  }
+  function closeChat(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+    document.getElementById('wa-fab-wrap').style.display='flex';
+    stopSpeak();
+  }
+  fab.onclick=openChat; tag.onclick=openChat; closeBtn.onclick=closeChat;
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&overlay.classList.contains('open')) closeChat(); });
+
+  function scrollDown(){ msgsEl.scrollTop=msgsEl.scrollHeight; }
+  function addBot(t){
+    var d=document.createElement('div'); d.className='wa-bubble wa-bot'; d.textContent=t;
+    var sp=document.createElement('button'); sp.className='wa-speakbtn';
+    sp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>'+L.speak;
+    sp.onclick=function(){ speak(t); };
+    var wrap=document.createElement('div'); wrap.style.alignSelf='flex-start';wrap.style.display='flex';wrap.style.flexDirection='column';
+    wrap.appendChild(d); wrap.appendChild(sp);
+    msgsEl.appendChild(wrap); scrollDown();
+  }
+  function addUser(t){
+    var d=document.createElement('div'); d.className='wa-bubble wa-user'; d.textContent=t;
+    msgsEl.appendChild(d); scrollDown();
+  }
+  function renderChips(arr){
+    chipsEl.innerHTML='';
+    arr.forEach(function(c){
+      var b=document.createElement('button'); b.className='wa-chip'; b.textContent=c;
+      b.onclick=function(){ chipsEl.innerHTML=''; send(c); };
+      chipsEl.appendChild(b);
+    });
+  }
+  function showTyping(){
+    var d=document.createElement('div'); d.className='wa-typing'; d.id='wa-typing';
+    d.innerHTML='<span></span><span></span><span></span>';
+    msgsEl.appendChild(d); scrollDown(); return d;
+  }
+  function hideTyping(){ var t=document.getElementById('wa-typing'); if(t) t.remove(); }
+
+  function autosize(){ textEl.style.height='auto'; textEl.style.height=Math.min(textEl.scrollHeight,120)+'px'; }
+  textEl.addEventListener('input',function(){ autosize(); sendBtn.disabled=!textEl.value.trim(); });
+  textEl.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); if(textEl.value.trim()) send(textEl.value.trim()); }});
+  sendBtn.onclick=function(){ if(textEl.value.trim()) send(textEl.value.trim()); };
+
+  function send(text){
+    chipsEl.innerHTML='';
+    addUser(text);
+    history.push({role:'user',content:text});
+    textEl.value=''; autosize(); sendBtn.disabled=true;
+    if(!EP || EP.indexOf('REPLACE')>-1){ addBot(L.noEP); return; }
+    var typing=showTyping();
+    fetch(EP,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})})
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        hideTyping();
+        var reply=data.reply||L.err;
+        history.push({role:'assistant',content:reply});
+        addBot(reply);
+      })
+      .catch(function(){ hideTyping(); addBot(L.err); });
+  }
+
+  /* ===== الإدخال الصوتي (Speech-to-Text) ===== */
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition, rec=null, recording=false;
+  if(SR){
+    rec=new SR(); rec.lang=isAR?'ar-SA':'en-US'; rec.interimResults=true; rec.continuous=false;
+    var finalTxt='';
+    rec.onstart=function(){ recording=true; micBtn.classList.add('rec'); voiceNote.textContent=L.listening; finalTxt=''; };
+    rec.onresult=function(e){
+      var interim='';
+      for(var i=e.resultIndex;i<e.results.length;i++){
+        if(e.results[i].isFinal) finalTxt+=e.results[i][0].transcript;
+        else interim+=e.results[i][0].transcript;
+      }
+      textEl.value=finalTxt+interim; autosize(); sendBtn.disabled=!textEl.value.trim();
+    };
+    rec.onerror=function(){ stopRec(); };
+    rec.onend=function(){ stopRec(); if(textEl.value.trim()) send(textEl.value.trim()); };
+  }
+  function startRec(){ if(!rec){ voiceNote.textContent=L.nospeech; return;} try{ stopSpeak(); rec.start(); }catch(e){} }
+  function stopRec(){ recording=false; micBtn.classList.remove('rec'); voiceNote.textContent=''; }
+  micBtn.onclick=function(){ if(!rec){ voiceNote.textContent=L.nospeech; return;} if(recording){ rec.stop(); } else { startRec(); } };
+
+  /* ===== النطق الصوتي (Text-to-Speech) بلهجة عربية ===== */
+  var synth=window.speechSynthesis;
+  function speak(t){
+    if(!synth){ return; }
+    stopSpeak();
+    var u=new SpeechSynthesisUtterance(t);
+    u.lang=isAR?'ar-SA':'en-US'; u.rate=isAR?0.98:1; u.pitch=1;
+    var vs=synth.getVoices();
+    var arv=vs.filter(function(v){return v.lang&&v.lang.indexOf('ar')===0;});
+    if(isAR&&arv.length){ var sa=arv.find(function(v){return v.lang==='ar-SA';}); u.voice=sa||arv[0]; }
+    synth.speak(u);
+  }
+  function stopSpeak(){ if(synth&&synth.speaking) synth.cancel(); }
+  if(synth){ synth.onvoiceschanged=function(){}; }
+})();
+</script>
+<!-- ============ /Waleed.in AI Assistant Widget ============ -->
