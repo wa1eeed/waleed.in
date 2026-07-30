@@ -420,18 +420,6 @@ html[dir=rtl] .qr-cta{animation-name:ctashineR}
 @media(prefers-reduced-motion:reduce){.inv .d::after{animation:none}}
 @media(max-width:520px){.pitch{padding:24px 20px}}
 
-/* ===== brand mark ===== */
-.brand{position:relative;display:inline-block;animation:brandin .85s cubic-bezier(.2,.7,.3,1) both}
-@keyframes brandin{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
-.brand em{position:relative;display:inline-block;color:var(--ac);font-style:normal;transition:transform .45s cubic-bezier(.34,1.7,.64,1)}
-.brand em::after{content:'';position:absolute;left:50%;top:58%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;border:1.5px solid var(--ac);opacity:0;pointer-events:none;animation:brandping 3.2s ease-out infinite}
-@keyframes brandping{0%{transform:scale(1);opacity:.75}70%{opacity:.08}100%{transform:scale(4.6);opacity:0}}
-.brand::after{content:'';position:absolute;inset-inline:0;bottom:-4px;height:1.5px;border-radius:2px;background:linear-gradient(90deg,var(--ac),var(--ac2));transform:scaleX(0);transform-origin:left center;transition:transform .45s cubic-bezier(.2,.7,.3,1)}
-html[dir=rtl] .brand::after{transform-origin:right center}
-.brand:hover::after{transform:scaleX(1)}
-.brand:hover em{transform:scale(1.55) translateY(-1px)}
-@media(prefers-reduced-motion:reduce){.brand,.brand em::after{animation:none}.brand::after,.brand em{transition:none}}
-
 /* ===== mobile back link (inner pages) ===== */
 .navback{display:none;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink2);border:1px solid var(--bdr);background:var(--card);padding:7px 13px 7px 10px;border-radius:999px;white-space:nowrap;transition:.22s}
 .navback svg{width:14px;height:14px;flex-shrink:0}

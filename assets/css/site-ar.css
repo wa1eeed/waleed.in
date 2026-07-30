@@ -391,14 +391,14 @@ html[dir=rtl] .pcard .go svg{transform:scaleX(-1)}
 .qr-big{display:block;flex-shrink:0;padding:7px;border-radius:14px;background:#fff;border:1px solid var(--bdr);transition:transform .35s cubic-bezier(.34,1.4,.64,1)}
 .contact-card:hover .qr-big{transform:scale(1.04)}
 .qr-big img{width:104px;height:104px;display:block}
-.qr-cta{flex:1;text-align:center;font-size:15px;font-weight:600;line-height:1.6;letter-spacing:.01em;
+.qr-cta{flex:1;text-align:center;font-family:'Tajawal';font-size:16px;font-weight:500;line-height:1.6;letter-spacing:.01em;
   background:linear-gradient(100deg,var(--ink2) 0%,var(--ink2) 38%,var(--ac2) 47%,var(--ac) 53%,var(--ink2) 62%,var(--ink2) 100%);
   background-size:280% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
   animation:ctashine 3.4s cubic-bezier(.55,0,.45,1) infinite}
 @keyframes ctashine{0%{background-position:130% 0}60%,100%{background-position:-30% 0}}
 html[dir=rtl] .qr-cta{animation-name:ctashineR}
 @keyframes ctashineR{0%{background-position:-30% 0}60%,100%{background-position:130% 0}}
-.qr-cta b{display:block;font-weight:700}
+.qr-cta b{display:block;font-weight:800}
 @media(prefers-reduced-motion:reduce){.qr-cta{animation:none;background:none;color:var(--ink2)}.contact-card,.qr-big{transition:none}.contact-card::before{animation:none;background:var(--ac)}}
 @media(max-width:560px){
 .contact-card{gap:14px;padding:13px 14px;border-radius:18px}
@@ -417,18 +417,6 @@ html[dir=rtl] .qr-cta{animation-name:ctashineR}
 .pitch p{font-size:14.5px;color:var(--ink2);line-height:1.85;max-width:620px;margin:0 auto 20px}
 @media(prefers-reduced-motion:reduce){.inv .d::after{animation:none}}
 @media(max-width:520px){.pitch{padding:24px 20px}}
-
-/* ===== brand mark ===== */
-.brand{position:relative;display:inline-block;animation:brandin .85s cubic-bezier(.2,.7,.3,1) both}
-@keyframes brandin{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
-.brand em{position:relative;display:inline-block;color:var(--ac);font-style:normal;transition:transform .45s cubic-bezier(.34,1.7,.64,1)}
-.brand em::after{content:'';position:absolute;left:50%;top:58%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;border:1.5px solid var(--ac);opacity:0;pointer-events:none;animation:brandping 3.2s ease-out infinite}
-@keyframes brandping{0%{transform:scale(1);opacity:.75}70%{opacity:.08}100%{transform:scale(4.6);opacity:0}}
-.brand::after{content:'';position:absolute;inset-inline:0;bottom:-4px;height:1.5px;border-radius:2px;background:linear-gradient(90deg,var(--ac),var(--ac2));transform:scaleX(0);transform-origin:left center;transition:transform .45s cubic-bezier(.2,.7,.3,1)}
-html[dir=rtl] .brand::after{transform-origin:right center}
-.brand:hover::after{transform:scaleX(1)}
-.brand:hover em{transform:scale(1.55) translateY(-1px)}
-@media(prefers-reduced-motion:reduce){.brand,.brand em::after{animation:none}.brand::after,.brand em{transition:none}}
 
 /* ===== mobile back link (inner pages) ===== */
 .navback{display:none;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink2);border:1px solid var(--bdr);background:var(--card);padding:7px 13px 7px 10px;border-radius:999px;white-space:nowrap;transition:.22s}
