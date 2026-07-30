@@ -372,3 +372,33 @@ html[dir=rtl] .pcard .go svg{transform:scaleX(-1)}
 @media(max-width:520px){.pj{padding:24px 20px}}
 
 .btn svg{width:14px;height:14px;flex-shrink:0}
+
+@media(max-width:560px){
+.hero .ctas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.hero .ctas>*{width:100%;justify-content:center;text-align:center;padding:11px 6px;font-size:11.5px;gap:5px;border-radius:14px}
+}
+
+/* ===== save contact + QR ===== */
+.save-row{display:flex;align-items:stretch;justify-content:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+.btn-save{position:relative;overflow:hidden;background:var(--card);color:var(--ink);border:1.5px solid color-mix(in srgb,var(--ac) 55%,var(--bdr));padding:0 26px;isolation:isolate}
+.btn-save::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(120deg,transparent 0%,color-mix(in srgb,var(--ac) 22%,transparent) 45%,transparent 70%);transform:translateX(-120%);animation:sweep 3.6s ease-in-out infinite}
+html[dir=rtl] .btn-save::before{animation-name:sweepR}
+@keyframes sweep{0%{transform:translateX(-120%)}55%,100%{transform:translateX(220%)}}
+@keyframes sweepR{0%{transform:translateX(120%)}55%,100%{transform:translateX(-220%)}}
+.btn-save .ic{display:inline-flex;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(2.5px)}}
+.btn-save:hover{border-color:var(--ac);color:var(--ac);transform:translateY(-2px);box-shadow:0 12px 28px rgba(22,36,61,.16)}
+.qr{display:flex;align-items:center;gap:11px;padding:9px 14px 9px 9px;border:1px solid var(--bdr);border-radius:16px;background:var(--card);box-shadow:var(--sh);transition:border-color .3s,transform .3s,box-shadow .3s}
+html[dir=rtl] .qr{padding:9px 9px 9px 14px}
+.qr:hover{border-color:var(--ac);transform:translateY(-2px);box-shadow:0 12px 28px rgba(22,36,61,.16)}
+.qr img{width:62px;height:62px;display:block;border-radius:6px;background:#fff;padding:4px}
+.qr .hint{font-size:11px;line-height:1.45;color:var(--muted);text-align:start;max-width:110px}
+@media(prefers-reduced-motion:reduce){.btn-save::before,.btn-save .ic{animation:none}}
+@media(max-width:560px){
+.save-row{gap:8px;flex-wrap:nowrap}
+.btn-save{padding:0 12px;font-size:11.5px;gap:6px;white-space:nowrap}
+.qr{padding:6px 9px 6px 6px;gap:8px}
+html[dir=rtl] .qr{padding:6px 6px 6px 9px}
+.qr img{width:48px;height:48px;padding:3px}
+.qr .hint{font-size:10px;max-width:72px;line-height:1.35}
+}
