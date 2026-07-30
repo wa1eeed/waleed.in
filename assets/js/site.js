@@ -15,7 +15,7 @@ var me=document.querySelector('.metrics');if(me){var mo=new IntersectionObserver
 var toast=document.getElementById('toast'),tt;
 function show(m){toast.textContent=m;toast.classList.add('on');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('on');},2200);}
 var isAR=(document.documentElement.lang||'en').indexOf('ar')===0;
-var url='https://waleed.in/'+(isAR?'ar/':'en/');
+var url='https://waleed.in'+location.pathname;
 var txt=isAR?'\u0648\u0644\u064a\u062f \u0627\u0644\u062d\u0631\u0628\u064a \u2014 \u0642\u064a\u0627\u062f\u064a \u062a\u0646\u0641\u064a\u0630\u064a \u0641\u064a \u0627\u0644\u062a\u062d\u0648\u0651\u0644 \u0627\u0644\u0645\u0624\u0633\u0633\u064a \u0648\u0645\u0646\u0635\u0651\u0627\u062a \u0627\u0644\u0623\u0639\u0645\u0627\u0644 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a':'Waleed Al Harbi - Chief Executive Officer';
 var T=isAR?{copied:'\u062a\u0645 \u0646\u0633\u062e \u0627\u0644\u0631\u0627\u0628\u0637',ok:'\u062a\u0645',useBtns:'\u0627\u0633\u062a\u062e\u062f\u0645 \u0627\u0644\u0623\u0632\u0631\u0627\u0631'}:{copied:'Link copied',ok:'Link copied',useBtns:'Use share buttons'};
 document.getElementById('wa').href='https://wa.me/?text='+encodeURIComponent(txt+' '+url);
@@ -67,7 +67,7 @@ document.getElementById('ns').onclick=function(){if(navigator.share)navigator.sh
 
 (function(){
   var isAR=(document.documentElement.lang||'ar').indexOf('ar')===0;
-  var url='https://waleed.in/'+(isAR?'ar/':'en/');
+  var url='https://waleed.in'+location.pathname;
   var txt=isAR?'وليد الحربي - قيادي تنفيذي في التحوّل المؤسسي ومنصّات الأعمال المدعومة بالذكاء الاصطناعي':'Waleed Al Harbi - Executive Business Leader & Enterprise Transformation';
   var pop=document.getElementById('wa-share-pop');
   function open(){pop.classList.add('open');}
@@ -93,4 +93,30 @@ document.getElementById('ns').onclick=function(){if(navigator.share)navigator.sh
   // حماية: منع القائمة والسحب
   frame.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
   frame.addEventListener('dragstart',function(e){e.preventDefault();return false;});
+})();
+
+/* solution cards -> detail modal (landing page) */
+(function(){
+  var mdl=document.getElementById('mdl'); if(!mdl) return;
+  var body=mdl.querySelector('.mdl-c'), last=null;
+  function open(card){
+    var tpl=document.getElementById(card.getAttribute('data-detail'));
+    if(!tpl) return;
+    last=card;
+    body.innerHTML='<button class="mdl-x" type="button" aria-label="Close">&#10005;</button>'+tpl.innerHTML;
+    body.querySelector('.mdl-x').addEventListener('click',close);
+    mdl.classList.add('on');
+    document.body.style.overflow='hidden';
+    body.setAttribute('tabindex','-1'); body.focus();
+  }
+  function close(){
+    mdl.classList.remove('on');
+    document.body.style.overflow='';
+    if(last){last.focus();last=null;}
+  }
+  document.querySelectorAll('.sol-c').forEach(function(c){
+    c.addEventListener('click',function(){open(c);});
+  });
+  mdl.querySelector('.mdl-bd').addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mdl.classList.contains('on'))close();});
 })();
