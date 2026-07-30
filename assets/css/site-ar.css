@@ -378,27 +378,33 @@ html[dir=rtl] .pcard .go svg{transform:scaleX(-1)}
 .hero .ctas>*{width:100%;justify-content:center;text-align:center;padding:11px 6px;font-size:11.5px;gap:5px;border-radius:14px}
 }
 
-/* ===== save contact card (QR + button in one frame) ===== */
+/* ===== save contact card (QR + shimmering call to action) ===== */
 .save-row{display:flex;justify-content:center;margin-top:16px}
-.contact-card{display:flex;align-items:center;gap:20px;width:100%;max-width:500px;padding:16px 18px;border:1px solid var(--bdr);border-radius:20px;background:var(--card);box-shadow:var(--sh);transition:border-color .35s,box-shadow .35s,transform .35s}
-.contact-card:hover{border-color:color-mix(in srgb,var(--ac) 42%,var(--bdr));box-shadow:0 16px 38px rgba(22,36,61,.15);transform:translateY(-2px)}
+.contact-card{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;gap:20px;width:100%;max-width:500px;padding:18px 20px;border-radius:20px;background:transparent;box-shadow:var(--sh);cursor:pointer;color:inherit;transition:box-shadow .35s,transform .35s}
+.contact-card::before{content:'';position:absolute;inset:-70%;z-index:-2;background:conic-gradient(transparent 0deg,transparent 285deg,color-mix(in srgb,var(--ac2) 85%,transparent) 330deg,var(--ac) 352deg,transparent 360deg);animation:beam 4.5s linear infinite}
+.contact-card::after{content:'';position:absolute;inset:1.5px;z-index:-1;border-radius:18.5px;background:var(--card);border:1px solid color-mix(in srgb,var(--ac) 12%,var(--bdr))}
+@keyframes beam{to{transform:rotate(360deg)}}
+.contact-card>*{position:relative;z-index:1}
+.contact-card:hover{box-shadow:0 16px 38px rgba(22,36,61,.16);transform:translateY(-2px)}
+.contact-card:hover::before{animation-duration:1.8s}
+.contact-card:active{transform:translateY(0) scale(.99)}
 .qr-big{display:block;flex-shrink:0;padding:7px;border-radius:14px;background:#fff;border:1px solid var(--bdr);transition:transform .35s cubic-bezier(.34,1.4,.64,1)}
-.qr-big:hover{transform:scale(1.05)}
-.qr-big img{width:96px;height:96px;display:block}
-.btn-save{position:relative;overflow:hidden;flex:1;justify-content:center;background:transparent;color:var(--ink);border:1.5px solid color-mix(in srgb,var(--ac) 55%,var(--bdr));padding:14px 18px;isolation:isolate}
-.btn-save::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(120deg,transparent 0%,color-mix(in srgb,var(--ac) 22%,transparent) 45%,transparent 70%);transform:translateX(-120%);animation:sweep 3.6s ease-in-out infinite}
-html[dir=rtl] .btn-save::before{animation-name:sweepR}
-@keyframes sweep{0%{transform:translateX(-120%)}55%,100%{transform:translateX(220%)}}
-@keyframes sweepR{0%{transform:translateX(120%)}55%,100%{transform:translateX(-220%)}}
-.btn-save .ic{display:inline-flex;animation:bob 2.4s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(2.5px)}}
-.btn-save:hover{border-color:var(--ac);color:var(--ac);background:color-mix(in srgb,var(--ac) 7%,transparent)}
-@media(prefers-reduced-motion:reduce){.btn-save::before,.btn-save .ic{animation:none}.contact-card,.qr-big{transition:none}}
+.contact-card:hover .qr-big{transform:scale(1.04)}
+.qr-big img{width:104px;height:104px;display:block}
+.qr-cta{flex:1;text-align:center;font-size:15px;font-weight:600;line-height:1.6;letter-spacing:.01em;
+  background:linear-gradient(100deg,var(--ink2) 0%,var(--ink2) 38%,var(--ac2) 47%,var(--ac) 53%,var(--ink2) 62%,var(--ink2) 100%);
+  background-size:280% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:ctashine 3.4s cubic-bezier(.55,0,.45,1) infinite}
+@keyframes ctashine{0%{background-position:130% 0}60%,100%{background-position:-30% 0}}
+html[dir=rtl] .qr-cta{animation-name:ctashineR}
+@keyframes ctashineR{0%{background-position:-30% 0}60%,100%{background-position:130% 0}}
+.qr-cta b{display:block;font-weight:700}
+@media(prefers-reduced-motion:reduce){.qr-cta{animation:none;background:none;color:var(--ink2)}.contact-card,.qr-big{transition:none}.contact-card::before{animation:none;background:var(--ac)}}
 @media(max-width:560px){
 .contact-card{gap:14px;padding:13px 14px;border-radius:18px}
 .qr-big{padding:6px;border-radius:12px}
-.qr-big img{width:80px;height:80px}
-.btn-save{padding:13px 10px;font-size:12.5px;gap:7px}
+.qr-big img{width:86px;height:86px}
+.qr-cta{font-size:13px;line-height:1.55}
 }
 
 /* ===== partnership signal ===== */
