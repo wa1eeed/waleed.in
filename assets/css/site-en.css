@@ -333,3 +333,44 @@ html[dir=rtl] .sol-more svg{transform:scaleX(-1)}
 @media(max-width:520px){.mdl{padding:12px}.mdl-c{padding:24px 20px}}
 
 a.brand{display:inline-block;text-decoration:none;color:inherit}
+
+/* ===== profile home + projects page ===== */
+.p-intro{max-width:620px;margin:22px auto 0;text-align:center;font-size:clamp(15.5px,2.1vw,18px);color:var(--ink2);line-height:1.85}
+.social{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}
+.soc{width:52px;height:52px;border-radius:16px;border:1px solid var(--bdr);background:var(--card);box-shadow:var(--sh);display:flex;align-items:center;justify-content:center;color:var(--ink2);position:relative;transition:transform .3s cubic-bezier(.34,1.4,.64,1),border-color .3s,color .3s,box-shadow .3s}
+.soc svg{width:21px;height:21px}
+.soc:hover{transform:translateY(-5px);border-color:var(--ac);color:var(--ac);box-shadow:0 12px 26px rgba(22,36,61,.16)}
+.soc::after{content:attr(data-l);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--card);font-size:10.5px;padding:4px 9px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.soc:hover::after{opacity:1}
+.pcards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;perspective:1200px}
+@media(max-width:640px){.pcards{grid-template-columns:1fr}}
+.pcard{position:relative;display:block;background:var(--card);border:1px solid var(--bdr);border-radius:18px;box-shadow:var(--sh);padding:26px 24px;overflow:hidden;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.3,1),box-shadow .5s,border-color .4s}
+.pcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 13%,transparent),transparent 55%);opacity:0;transition:opacity .45s}
+.pcard::after{content:'';position:absolute;top:-60%;inset-inline-start:-60%;width:60%;height:220%;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--ac2) 22%,transparent),transparent);transform:rotate(18deg);transition:inset-inline-start .8s ease}
+@media(hover:hover){
+.pcard:hover{transform:translateY(-8px) rotateX(3deg) rotateY(-3deg);box-shadow:0 26px 55px rgba(22,36,61,.18);border-color:color-mix(in srgb,var(--ac) 45%,var(--bdr))}
+.pcard:hover::before{opacity:1}
+.pcard:hover::after{inset-inline-start:130%}
+}
+.pcard>*{position:relative;z-index:1}
+.pcard .n{font-family:'Fraunces';font-style:italic;font-weight:600;font-size:13px;color:var(--ac);display:block;margin-bottom:8px}
+.pcard h3{font-family:'Fraunces';font-weight:600;font-size:21px;letter-spacing:-.01em;color:var(--ink);margin-bottom:3px}
+.pcard .t{display:block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);margin-bottom:11px}
+.pcard p{font-size:14px;color:var(--ink2);line-height:1.7}
+.pcard .go{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:12.5px;font-weight:600;color:var(--ac)}
+.pcard .go svg{width:13px;height:13px}
+html[dir=rtl] .pcard .go svg{transform:scaleX(-1)}
+.pj{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);box-shadow:var(--sh);padding:34px;margin-bottom:20px;scroll-margin-top:80px}
+.pj-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.pj-n{font-family:'Fraunces';font-style:italic;font-weight:600;font-size:17px;color:var(--ac)}
+.pj h2{font-family:'Fraunces';font-weight:600;font-size:clamp(22px,3.2vw,29px);letter-spacing:-.015em;color:var(--ink)}
+.pj .t{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ac);display:block;margin-bottom:18px}
+.pj p{font-size:15px;color:var(--ink2);line-height:1.85;margin-bottom:14px}
+.pj h4{font-family:'IBM Plex Sans';font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ac);margin:24px 0 12px}
+.pj ul{list-style:none;display:grid;gap:9px}
+.pj li{position:relative;padding-inline-start:18px;font-size:14.5px;color:var(--ink2);line-height:1.7}
+.pj li::before{content:'';position:absolute;inset-inline-start:2px;top:9px;width:6px;height:6px;border-radius:2px;background:var(--ac);transform:rotate(45deg)}
+@media(prefers-reduced-motion:reduce){.pcard,.soc{transition:none}.pcard::after,.pcard::before{display:none}}
+@media(max-width:520px){.pj{padding:24px 20px}}
+
+.btn svg{width:14px;height:14px;flex-shrink:0}
