@@ -431,3 +431,7 @@ nav .wrap{gap:10px}
 .brand{font-size:14px}
 }
 @media(max-width:344px){.navback span{display:none}.navback{padding:7px 10px}}
+
+.pitch-lbl{display:block;margin:26px 0 2px;font-family:'Tajawal';font-size:13.5px;font-weight:700;letter-spacing:0;color:var(--ac)}
+.pitch .social{margin-top:14px}
+.pitch .save-row{margin-top:18px}
