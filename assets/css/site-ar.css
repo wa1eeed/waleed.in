@@ -435,3 +435,13 @@ nav .wrap{gap:10px}
 .pitch-lbl{display:block;margin:26px 0 2px;font-family:'Tajawal';font-size:13.5px;font-weight:700;letter-spacing:0;color:var(--ac)}
 .pitch .social{margin-top:14px}
 .pitch .save-row{margin-top:18px}
+
+.cc .save-row{margin-top:20px}
+.cc .contact-card{max-width:100%}
+.cc .shr{justify-content:center;margin-top:16px}
+
+.nav-links a.active{color:var(--ac)}
+.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a::before{content:'';position:absolute;inset:-6px -10px;border-radius:999px;background:color-mix(in srgb,var(--ac) 9%,transparent);opacity:0;transform:scale(.9);transition:opacity .3s,transform .35s cubic-bezier(.34,1.5,.64,1);z-index:-1}
+.nav-links a{isolation:isolate}
+.nav-links a.active::before{opacity:1;transform:scale(1)}

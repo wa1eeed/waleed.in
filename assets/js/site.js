@@ -47,6 +47,16 @@ document.getElementById('ns').onclick=function(){if(navigator.share)navigator.sh
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
   var fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
   var links=[].slice.call(document.querySelectorAll('.nav-links a'));
+  // mark the link for the page currently being viewed
+  (function(){
+    function norm(p){return p.replace(/index\.html$/,'').replace(/\/+$/,'')||'/';}
+    var here=norm(location.pathname);
+    links.forEach(function(a){
+      var h=a.getAttribute('href')||'';
+      if(h.charAt(0)==='#') return;
+      if(norm(new URL(h,location.href).pathname)===here) a.classList.add('active');
+    });
+  })();
   if(links.length){
     var map={};links.forEach(function(a){var id=a.getAttribute('href').slice(1),s=document.getElementById(id);if(s)map[id]=a;});
     var so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.remove('active');});var a=map[e.target.id];if(a)a.classList.add('active');}});},{rootMargin:'-45% 0px -50% 0px'});
