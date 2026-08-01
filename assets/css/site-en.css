@@ -447,3 +447,29 @@ nav .wrap{gap:10px}
 .nav-links a::before{content:'';position:absolute;inset:-6px -10px;border-radius:999px;background:color-mix(in srgb,var(--ac) 9%,transparent);opacity:0;transform:scale(.9);transition:opacity .3s,transform .35s cubic-bezier(.34,1.5,.64,1);z-index:-1}
 .nav-links a{isolation:isolate}
 .nav-links a.active::before{opacity:1;transform:scale(1)}
+
+/* ===== partner tiles ===== */
+.ptiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+@media(max-width:760px){.ptiles{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.ptiles{grid-template-columns:1fr}}
+.ptile{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--bdr);border-radius:14px;box-shadow:var(--sh);padding:18px 16px;text-align:center;transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s,border-color .35s}
+.ptile::after{content:'';position:absolute;inset-inline:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--ac),var(--ac2));transform:scaleX(0);transform-origin:left center;transition:transform .4s ease}
+html[dir=rtl] .ptile::after{transform-origin:right center}
+@media(hover:hover){.ptile:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(22,36,61,.13);border-color:color-mix(in srgb,var(--ac) 38%,var(--bdr))}.ptile:hover::after{transform:scaleX(1)}}
+.ptile .nm{display:block;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:.01em}
+.ptile .cat{display:block;margin-top:5px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* ===== expertise: domain tiles + tab icons ===== */
+.doms{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:820px){.doms{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.doms{grid-template-columns:repeat(2,1fr)}}
+.dom{background:linear-gradient(160deg,color-mix(in srgb,var(--ac) 8%,var(--card)),var(--card));border:1px solid var(--bdr);border-radius:14px;box-shadow:var(--sh);padding:18px 12px;text-align:center;transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s,border-color .35s}
+@media(hover:hover){.dom:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(22,36,61,.13);border-color:color-mix(in srgb,var(--ac) 40%,var(--bdr))}}
+.dom svg{width:24px;height:24px;color:var(--ac);margin-bottom:9px}
+.dom span{display:block;font-size:13px;font-weight:600;color:var(--ink);line-height:1.4}
+.xp-tab{display:inline-flex;align-items:center;gap:7px}
+.xp-tab svg{width:15px;height:15px;flex-shrink:0;opacity:.75}
+.xp-tab.on svg{opacity:1}
+.xp-pane.on .chip{animation:chipin .4s cubic-bezier(.2,.7,.3,1) both}
+@keyframes chipin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.ptile,.dom{transition:none}.ptile::after{display:none}.xp-pane.on .chip{animation:none}}
