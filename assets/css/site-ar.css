@@ -471,3 +471,9 @@ html[dir=rtl] .ptile::after{transform-origin:right center}
 .xp-pane.on .chip{animation:chipin .4s cubic-bezier(.2,.7,.3,1) both}
 @keyframes chipin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.ptile,.dom{transition:none}.ptile::after{display:none}.xp-pane.on .chip{animation:none}}
+
+#education .two{grid-template-columns:repeat(3,1fr)}
+@media(max-width:880px){#education .two{grid-template-columns:1fr 1fr}#education .panel:last-child{grid-column:1/-1}}
+@media(max-width:580px){#education .two{grid-template-columns:1fr}#education .panel:last-child{grid-column:auto}}
+.panel h3{font-size:13px;font-weight:700;letter-spacing:0;color:var(--ac);margin-bottom:14px}
+.panel .chips{gap:8px}
